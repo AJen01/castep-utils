@@ -1,5 +1,7 @@
 from pprint import pprint as pp
 import numpy as np
+from pathlib import Path
+import argparse
 
 
 class GEOMOPT:
@@ -7,6 +9,7 @@ class GEOMOPT:
         self.positions = {}
         self.steps = []
         self.append = False
+        self.filename = None
 
     def is_int(self, string):
         try:
@@ -24,7 +27,8 @@ class GEOMOPT:
             return False
 
     def read_geom(self, filename):
-        with open(filename, "r", encoding="utf-8") as i:
+        self.filename = Path(filename)
+        with open(self.filename, "r", encoding="utf-8") as i:
             lines = i.readlines()
         step = 0
         coord = 0
@@ -47,7 +51,8 @@ class GEOMOPT:
         return coord * 0.529177249
 
     def write_geom(self):
-        with open("mCPPD.xyz", "w", encoding="utf-8") as o:
+        
+        with open(self.filename.with_suffix('.xyz'), "w", encoding="utf-8") as o:
             pp(self.steps)
             for item in self.steps:
                 if isinstance(item, str):
@@ -64,5 +69,10 @@ class GEOMOPT:
 
 if __name__ == "__main__":
     cs = GEOMOPT()
-    cs.read_geom("mCPPD.geom")
+
+    parser = argparse.ArgumentParser(description="CASTEP-utils Argument Parser")
+    parser.add_argument("-f", "--filename", type=str, help="Path to the geometry file")
+
+    args = parser.parse_args()
+    cs.read_geom(args.filename)
     cs.write_geom()
