@@ -1,5 +1,3 @@
-from pprint import pprint as pp
-import numpy as np
 from pathlib import Path
 import argparse
 import matplotlib.pyplot as plt
@@ -94,10 +92,11 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="CASTEP-utils Argument Parser")
     parser.add_argument("-f", "--filename", default="mCPPD.castep",type=str, help="Path to the castep file")
+    parser.add_argument("-c", "--color", default=True,type=bool, help="Coloring full freqs option")
     args = parser.parse_args()
     ph.read_freqs(args.filename)
     ph.plot_ir()
     ph.plot_raman()
-    ph.plot_all()
+    ph.plot_all(color=args.color)
         
         
